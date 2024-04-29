@@ -10,7 +10,7 @@ def call(){
           pollSCM('* * * * *') // Programa la verificación del repositorio cada minuto
         }*/
         environment {
-           PROJECT = "${env.UrlGitHub.replaceAll('.+/(.+)\\.git', '$1')}".toLowerCase(Locale.ROOT)
+           PROJECT = "${env.UrlGitHub}".replaceAll('.+/(.+)\\.git', '$1').toLowerCase()
         } 
         stages {
       
@@ -18,7 +18,7 @@ def call(){
                 steps {
                     script {
                         def buildimage = new org.devops.lb_buildimagen()
-                        buildimage.buildImageDocker("${projectName}")
+                        buildimage.buildImageDocker("${PROJECT}")
                     }
                 }
                 
@@ -28,7 +28,7 @@ def call(){
                 steps {
                     script {
                         def publicImage = new org.devops.lb_publicardockerhub()
-                        publicImage.publicarimage("${projectName}")
+                        publicImage.publicarimage("${PROJECT}")
                     }
                 }
             }
@@ -37,7 +37,7 @@ def call(){
                 steps {
                     script {
                         def deployImg = new org.devops.lb_deploydocker()
-                        deployImg.despliegueContenedor("${projectName}")
+                        deployImg.despliegueContenedor("${PROJECT}")
                     }
                 }
             }
