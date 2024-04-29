@@ -3,9 +3,8 @@ def call(){
     pipeline{
 
         agent any
-
         tools{
-            nodejs 'NodeJS'
+            nodejs 'NodeJS18'
         }
       /*triggers {
         pollSCM('* * * * *') // Programa la verificación del repositorio cada minuto
@@ -16,31 +15,33 @@ def call(){
         stages{
             
       
-             stage('Fase 1: Construccion App') {
+             stage('Fase 2: Construccion de imagen en Docker Desktop') {
                 steps {
                     script {
-                        def buildapp = new org.devops.lb_buildartefacto()
-                        buildapp.install()
-                        def cloneapp = new org.devops.lb_buildartefacto()
-                        cloneapp.clone()
+                        def buildimage = new org.devops.lb_buildimagen()
+                        buildimage.buildImageDocker("${projectName}")
                     }
                 }
                 
             }
 
-         stage('Fase 1: Sonar Analisis'){
+         stage('Fase 2: Publicar imagen a Docker Hub'){
                   steps{
                     script{
-                       def test = new org.devops.lb_analisissonarqube()
-                       test.testCoverage()
-                       def analisiSonar = new org.devops.lb_analisissonarqube()
-                       analisiSonar.analisisSonar("${PROJECT}")
-                       
+                       def publicImage = new org.devops.lb_publicardockerhub()
+                       publicImage.publicarimage("${projectName}")
                     }
                  }
            }
 
-         
+         stage('Fase 2: Desplegar imagen en Docker'){
+                  steps{
+                    script{
+                       def deployImg = new org.devops.lb_deploydocker()
+                       deployImg.despliegueContenedor("${projectName}")
+                    }
+                 }
+           }
                    
         }
         
