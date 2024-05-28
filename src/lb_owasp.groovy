@@ -1,4 +1,3 @@
-/*
 package org.devops
 
 def AnalisisOwasp(projectGitName){
@@ -10,4 +9,3 @@ sh """ docker run --rm -v ProjectOwasp:/zap/wrk/:rw \
       -r ProjectOwasp.html -I
       """
 }
-*/
